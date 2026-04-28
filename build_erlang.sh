@@ -9,7 +9,7 @@
 set -e -o pipefail
 
 PACKAGE_NAME="erlang"
-PACKAGE_VERSION="28.4.2"
+PACKAGE_VERSION="28.5"
 CURDIR="$(pwd)"
 
 
