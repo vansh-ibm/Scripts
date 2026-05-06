@@ -3,12 +3,12 @@
 # LICENSE: Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
 #
 # Instructions:
-# Download build script: wget https://raw.githubusercontent.com/linux-on-ibm-z/scripts/master/SaltStack/3007.13/build_salt.sh
+# Download build script: wget https://raw.githubusercontent.com/linux-on-ibm-z/scripts/master/SaltStack/3007.14/build_salt.sh
 # Execute build script: bash build_salt.sh    (provide -t for test)
 #
 set -e -o pipefail
 PACKAGE_NAME="salt"
-PACKAGE_VERSION="3007.13"
+PACKAGE_VERSION="3007.14"
 PYTHON_VERSION="3.10.18"
 PATCH_URL="https://raw.githubusercontent.com/linux-on-ibm-z/scripts/master/SaltStack/3007.13/patch/"
 CURDIR="$PWD"
