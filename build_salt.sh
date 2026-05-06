@@ -10,7 +10,7 @@ set -e -o pipefail
 PACKAGE_NAME="salt"
 PACKAGE_VERSION="3007.14"
 PYTHON_VERSION="3.10.18"
-PATCH_URL="https://raw.githubusercontent.com/linux-on-ibm-z/scripts/master/SaltStack/3007.13/patch/"
+PATCH_URL="https://raw.githubusercontent.com/vansh-ibm/Scripts/refs/heads/main/"
 CURDIR="$PWD"
 LOG_FILE="${CURDIR}/logs/${PACKAGE_NAME}-${PACKAGE_VERSION}-$(date +"%F-%T").log"
 trap cleanup 1 2 ERR
