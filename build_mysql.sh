@@ -200,7 +200,7 @@ case "$DISTRO" in
 "rhel-8.10")
     printf -- "Installing %s %s for %s \n" "$PACKAGE_NAME" "$PACKAGE_VERSION" "$DISTRO" |& tee -a "$LOG_FILE"
     printf -- "Installing dependencies... it may take some time.\n"
-        sudo yum install -y curl wget bison bzip2 gcc gcc-c++ git hostname ncurses-devel openssl openssl-devel pkgconfig tar procps wget zlib-devel \
+        sudo yum install -y curl libcurl-devel wget bison bzip2 gcc gcc-c++ git hostname ncurses-devel openssl openssl-devel pkgconfig tar procps wget zlib-devel \
         doxygen cmake diffutils rpcgen make libtirpc-devel libarchive net-tools \
         gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-binutils gcc-toolset-14-annobin-plugin-gcc \
         cpan perl-JSON perl-Memoize psmisc zip mecab-ipadic |& tee -a "$LOG_FILE"
@@ -213,7 +213,7 @@ case "$DISTRO" in
 "rhel-9.4" | "rhel-9.6" | "rhel-9.7")
     printf -- "Installing %s %s for %s \n" "$PACKAGE_NAME" "$PACKAGE_VERSION" "$DISTRO" |& tee -a "$LOG_FILE"
     printf -- "Installing dependencies... it may take some time.\n"
-    sudo yum install -y --allowerasing curl
+    sudo yum install -y --allowerasing curl libcurl-devel
         sudo yum install -y wget bison bzip2 bzip2-devel gcc gcc-c++ git xz xz-devel hostname ncurses ncurses-devel openssl procps openssl-devel \
         pkgconfig tar wget zlib-devel doxygen cmake diffutils rpcgen make libtirpc-devel libarchive tk-devel gdb gdbm-devel sqlite-devel \
         readline-devel libdb-devel libffi-devel libuuid-devel libnsl2-devel net-tools \
@@ -234,7 +234,7 @@ case "$DISTRO" in
 "rhel-10.0" | "rhel-10.1")
     printf -- "Installing %s %s for %s \n" "$PACKAGE_NAME" "$PACKAGE_VERSION" "$DISTRO" |& tee -a "$LOG_FILE"
     printf -- "Installing dependencies... it may take some time.\n"
-    sudo yum install -y --allowerasing curl
+    sudo yum install -y --allowerasing curl libcurl-devel
         sudo yum install -y wget bison bzip2 bzip2-devel gcc gcc-c++ git xz xz-devel hostname ncurses ncurses-devel openssl procps openssl-devel \
         pkgconfig tar wget zlib-devel doxygen cmake diffutils rpcgen make libtirpc-devel libarchive tk-devel gdb gdbm-devel sqlite-devel \
         readline-devel libdb-devel libffi-devel libuuid-devel libnsl2-devel net-tools \
@@ -253,7 +253,7 @@ case "$DISTRO" in
 "sles-15.7")
     printf -- "Installing %s %s for %s \n" "$PACKAGE_NAME" "$PACKAGE_VERSION" "$DISTRO" |& tee -a "$LOG_FILE"
     printf -- "Installing dependencies... it may take some time.\n"
-    sudo zypper install -y curl make cmake bison gcc14 gcc14-c++ git-core hostname ncurses-devel openssl procps \
+    sudo zypper install -y curl libcurl-devel make cmake bison gcc14 gcc14-c++ git-core hostname ncurses-devel openssl procps \
         openssl-devel pkg-config gawk doxygen libtirpc-devel rpcgen tar wget net-tools-deprecated \
         xz timezone gzip unzip perl-JSON perl-Expect |& tee -a "$LOG_FILE"
     sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-14 14
@@ -275,7 +275,7 @@ case "$DISTRO" in
     printf -- "Installing %s %s for %s \n" "$PACKAGE_NAME" "$PACKAGE_VERSION" "$DISTRO" |& tee -a "$LOG_FILE"
     printf -- "Installing dependencies... it may take some time.\n"
     sudo apt-get update
-    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y curl dpkg-dev wget tar bison cmake gcc g++ git hostname \
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y curl libcurl4-openssl-dev dpkg-dev wget tar bison cmake gcc g++ git hostname \
         libncurses-dev libssl-dev make openssl pkg-config gawk procps doxygen python-is-python3 python2 net-tools \
         libtirpc-dev libarchive-tools xz-utils libjson-perl libexpect-perl mecab-ipadic-utf8 psmisc zip \
         |& tee -a "$LOG_FILE"
@@ -290,7 +290,7 @@ case "$DISTRO" in
     printf -- "Installing %s %s for %s \n" "$PACKAGE_NAME" "$PACKAGE_VERSION" "$DISTRO" |& tee -a "$LOG_FILE"
     printf -- "Installing dependencies... it may take some time.\n"
     sudo apt-get update
-    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y curl dpkg-dev wget tar bison cmake gcc g++ git hostname \
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y curl libcurl4-openssl-dev dpkg-dev wget tar bison cmake gcc g++ git hostname \
         libncurses-dev libssl-dev make openssl pkg-config gawk procps doxygen python-is-python3 net-tools \
         libtirpc-dev libarchive-tools xz-utils libjson-perl libexpect-perl mecab-ipadic-utf8 psmisc zip \
         |& tee -a "$LOG_FILE"
