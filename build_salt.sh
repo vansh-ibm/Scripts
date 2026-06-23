@@ -125,7 +125,17 @@ function configureAndInstall()
         git clone --depth 1 -b v${PACKAGE_VERSION} https://github.com/saltstack/salt.git
         cd salt
         curl -sSL $PATCH_URL/salt.patch |  git apply -
-        sed -i 's/PKCS1v15-SHA1/PKCS1v15-SHA224/g' tests/conftest.py tests/pytests/conftest.py
+        find salt tests -type f -name '*.py' -print0 | xargs -0 sed -i 's/PKCS1v15-SHA1/PKCS1v15-SHA224/g'
+sed -i 's/algorithm=PKCS1v15_SHA1/algorithm=PKCS1v15_SHA224/g' salt/crypt.py
+sed -i 's/salt\.crypt\.PKCS1v15_SHA1/salt.crypt.PKCS1v15_SHA224/g' salt/channel/server.py tests/pytests/unit/channel/test_server.py tests/pytests/unit/transport/test_zeromq.py tests/pytests/functional/channel/test_auth_downgrade.py tests/unit/test_config.py
+sed -i 's/return salt\.crypt\.PKCS1v15_SHA1/return salt.crypt.PKCS1v15_SHA224/g' tests/pytests/unit/crypt/test_crypt_cryptography.py
+sed -i 's/key.sign("meh", salt\.crypt\.PKCS1v15_SHA1)/key.sign("meh", salt.crypt.PKCS1v15_SHA224)/g' tests/pytests/unit/crypt/test_crypt_cryptography.py
+sed -i 's/pubkey.verify(signature, salt\.crypt\.PKCS1v15_SHA1)/pubkey.verify(signature, salt.crypt.PKCS1v15_SHA224)/g' tests/pytests/unit/crypt/test_crypt_cryptography.py
+sed -i 's/return SIG$/return SIG_SHA224/' tests/pytests/unit/crypt/test_crypt_cryptography.py
+sed -i 's/MessageDigest("sha1")/MessageDigest("sha224")/g' tests/pytests/unit/crypt/_init_.py
+sed -i 's/from Cryptodome.Hash import SHA$/from Cryptodome.Hash import SHA224 as SHA/g' tests/pytests/unit/crypt/_init_.py
+sed -i 's/from Crypto.Hash import SHA$/from Crypto.Hash import SHA224 as SHA/g' tests/pytests/unit/crypt/_init_.py
+sed -i 's/salt.crypt.verify_signature("\/keydir\/keyname.pub", MSG, SIG)/salt.crypt.verify_signature("\/keydir\/keyname.pub", MSG, SIG_SHA224)/' tests/pytests/unit/crypt/test_crypt_cryptography.py
         sed -i '/^lxml==/c\lxml==5.2.1' requirements/static/ci/py3.10/linux.txt
         pip3 install -e .
 
