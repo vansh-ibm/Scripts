@@ -1,0 +1,130 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: z-s390x-non-fips-ginkgo-1220-
+spec:
+  params:
+      # True if a new cluster needs to be created, False otherwise
+    - name: CREATE_CLUSTER
+      value: 'false'
+      # Choose arm64 while spinning up an ARM cluster
+    - name: CLUSTER_ARCH
+      value: "s390x"
+      # Eg:stable (latest stable version), stable-4.14, fast-4.14, candidate-4.14, 4.14.2, dev-preview/latest-4.15
+    - name: OPENSHIFT_VERSION
+      value: stable
+      # Flexy template that will be used for installation. Browse
+      # https://gitlab.cee.redhat.com/aosqe/flexy-templates/-/tree/master/functionality-testing
+      # Note: Use *ipi-on-aws* for AWS clusters
+    - name: TEMPLATE
+      value: >-
+        private-templates/functionality-testing/aos-4_14/ipi-on-osp/versioned-installer
+      # Variables to consider while spinning up clusters. Refer:https://gitlab.cee.redhat.com/aosqe/flexy-templates/-/tree/master/docs/variables
+      # Tip: Leave empty if AWS, use '{ "num_workers":3,"os_ext_network":"provider_net_cci_12,provider_net_cci_11,provider_net_cci_10","dns_solution":"route53"}' for PSI
+    - name: LAUNCHER_VARS
+      value: >-
+        {
+        "num_workers":3,"os_ext_network":"provider_net_cci_12,provider_net_cci_11,provider_net_cci_8","dns_solution":"route53"}
+      # Cluster will be deprovisioned after the specified time. This is only applicable to a flexy-install cluster
+    - name: CLUSTER_LIFE_TIME
+      value: '8h'
+      # Set to true if you want to keep the cluster. Note that CLUSTER_LIFE_TIME will not be valid upon setting the value to true
+    - name: KEEP_CLUSTER_ALIVE
+      value: true
+    - name: CLUSTER_NAME
+      value: z-non-fips-cluster-422
+      # cluster-admin for ROSA
+    - name: CLUSTER_USERNAME
+      value: admin
+      # Provide the below values for using your own cluster, leave empty otherwise
+    - name: PASSWORD
+      value: 'crw4ever!'
+    - name: API_SERVER
+      value: 'https://api.qe1.devspaces-s390x.psi.redhat.com:6443'
+      # Provide the value if exists
+    - name: CATALOG_SOURCE
+      value: ''
+      # Specify index image if any (eg:42312)
+    - name: IIB_ID
+      value: ''
+      # specify the catalog source image directly.
+      # You still need to fill out IIB_ID, it will be used for naming
+    - name: IIB_IMAGE
+      value: 'quay.io/redhat-user-workloads/rh-openshift-gitops-tenant/catalog:v4.22'
+      # Use nightly for nightly build
+    - name: BREW_BUILD_TAG
+      value: ''
+      # False if the operator is already installed
+    - name: INSTALL_OPERATOR
+      value: false
+      # GitOps operator version in x.y.z format. For upgrade, the upgrade version MUST be spcificed - 'latest' is invalid for upgrades.
+    - name: GITOPS_VERSION
+      value: 'latest'
+      # Choose between openshift-operators and openshift-gitops-operator (Supported GitOps v1.10 onwards)
+    - name: INSTALLATION_NAMESPACE
+      value: openshift-gitops-operator
+      # Direct installation/ Upgrade from previous version
+    - name: INSTALLATION_TYPE
+      value: Direct
+      # True if you want to run the argo rollouts tests, False otherwise
+    - name: RUN_ARGO_ROLLOUTS_TESTS
+      value: 'false'
+      # True if you want to run the KuTTL tests, False otherwise
+    - name: RUN_KUTTL_TESTS
+      value: 'false'
+      # From operator e2e
+    - name: RUN_GITOPS_OPERATOR_TESTS
+      value: 'true'
+    - name: RUN_UI_TESTS
+      value: 'false'
+    - name: KUTTL_TESTS_DIRECTORY
+      value: gitops-operator
+      # Choose between all|sequential|parallel
+    - name: TEST_SUITE
+      value: parallel
+      # Choose between xml json for kuttl tests
+    - name: REPORTING_TYPE
+      value: xml
+      # True if you want to run the ArgoCD E2E tests, False
+    - name: RUN_ARGOCD_E2E_TESTS
+      value: 'false'
+      # Leave empty if the version is same as it is used in the operator
+    - name: ARGOCD_VERSION
+      value: ''
+      # Image with all tools required for testing
+    - name: BOOTSTRAP_IMAGE
+      value: 'quay.io/devtools_gitops/test_image:latest'
+    - name: GITOPS_OPERATOR_REF
+      value: v1.22
+  pipelineRef:
+    name: z-stream-test-pipeline
+  serviceAccountName: pipeline
+  timeout: 8h0m0s
+  taskRunSpecs:
+    - pipelineTaskName: test-gitops-operator
+      timeout: 7h0m0s
+  workspaces:
+    - name: flexy-secrets
+      secret:
+        secretName: flexy
+    - name: git
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+          annotations:
+            kubernetes.io/reclaimPolicy: Delete
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 48Mi
+          storageClassName: aws-efs-tier-c4
+          volumeMode: Filesystem
+        status: {}
+    - name: install-dir
+      persistentVolumeClaim:
+        claimName: install-dir
+    - name: gitops-gocache
+      persistentVolumeClaim:
+        claimName: gitops-gocache
